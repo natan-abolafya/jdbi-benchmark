@@ -39,8 +39,8 @@ public class SimpleTest {
 		var jdbi = Jdbi.create(() -> DriverManager.getConnection("jdbc:postgresql://localhost/" + databaseName, username, password));
 		jdbi.installPlugin(new PostgresPlugin()).installPlugin(new SqlObjectPlugin());
 		try (var handle = jdbi.open()) {
-			try (var update = handle.createUpdate("CREATE TABLE simple ( name text ); " +
-					"INSERT INTO simple(name) VALUES('name'), ('name2'), ('name3')")) {
+			try (var update = handle.createUpdate("CREATE TABLE simple ( id numeric, name text ); " +
+					"INSERT INTO simple(id, name) VALUES(1, 'name'), (2, 'name2'), (3, 'name3')")) {
 				update.execute();
 			}
 		}
