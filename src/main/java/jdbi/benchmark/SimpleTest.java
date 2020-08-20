@@ -18,9 +18,14 @@ public class SimpleTest {
 	public static void main(String[] args) throws SQLException {
 		var jdbi = createDatabase("test");
 		var simpleDao = jdbi.onDemand(SimpleDao.class);
-		Stopwatch stopwatch = Stopwatch.createStarted();
-		System.out.println(simpleDao.getAll());
-		System.out.println(stopwatch.elapsed(TimeUnit.MILLISECONDS) + " ms");
+		simpleDao.getAll(); // warm-up
+
+		int count = 100;
+		var stopwatch = Stopwatch.createStarted();
+		for (int i = 0; i < count; i++) {
+			simpleDao.getAll();
+		}
+		System.out.println("Average: " + (stopwatch.elapsed(TimeUnit.MILLISECONDS) / count) + " ms");
 	}
 
 	public static Jdbi createDatabase(String databaseName) throws SQLException {
