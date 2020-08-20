@@ -5,6 +5,11 @@ import com.codahale.metrics.jdbi3.InstrumentedSqlLogger;
 import com.google.common.base.Stopwatch;
 import jdbi.benchmark.dao.SimpleDao;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.statement.SqlStatements;
+import org.jdbi.v3.core.statement.TemplateEngine;
+import org.jdbi.v3.guava.GuavaPlugin;
+import org.jdbi.v3.jackson2.Jackson2Plugin;
+import org.jdbi.v3.jodatime2.JodaTimePlugin;
 import org.jdbi.v3.postgres.PostgresPlugin;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
@@ -37,7 +42,11 @@ public class SimpleTest {
 		connection.close();
 
 		var jdbi = Jdbi.create(() -> DriverManager.getConnection("jdbc:postgresql://localhost/" + databaseName, username, password));
-		jdbi.installPlugin(new PostgresPlugin()).installPlugin(new SqlObjectPlugin());
+		jdbi.installPlugin(new PostgresPlugin())
+				.installPlugin(new SqlObjectPlugin())
+				.installPlugin(new JodaTimePlugin())
+				.installPlugin(new GuavaPlugin())
+				.installPlugin(new Jackson2Plugin());
 		try (var handle = jdbi.open()) {
 			try (var update = handle.createUpdate("CREATE TABLE simple ( id numeric, name text ); " +
 					"INSERT INTO simple(id, name) VALUES(1, 'name'), (2, 'name2'), (3, 'name3')")) {
@@ -45,6 +54,8 @@ public class SimpleTest {
 			}
 		}
 
+		final TemplateEngine original = jdbi.getConfig(SqlStatements.class).getTemplateEngine();
+		jdbi.setTemplateEngine(new DropwizardNamePrependingTemplateEngine(original));
 		jdbi.setSqlLogger(new InstrumentedSqlLogger(new MetricRegistry()));
 		return jdbi;
 	}

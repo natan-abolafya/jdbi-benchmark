@@ -20,6 +20,9 @@ dependencies {
     compile 'org.jdbi:jdbi3-core:' + jdbiVersion
     compile 'org.jdbi:jdbi3-sqlobject:' + jdbiVersion
     compile 'org.jdbi:jdbi3-postgres:' + jdbiVersion
+    compile 'org.jdbi:jdbi3-guava:' + jdbiVersion
+    compile 'org.jdbi:jdbi3-jodatime2:' + jdbiVersion
+    compile 'org.jdbi:jdbi3-jackson2:' + jdbiVersion
 
     compile('io.dropwizard.metrics:metrics-core:4.1.11'){
         exclude group: 'org.jdbi'
