@@ -1,5 +1,6 @@
 package jdbi.benchmark;
 
+import com.google.common.base.Stopwatch;
 import jdbi.benchmark.dao.SimpleDao;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.postgres.PostgresPlugin;
@@ -7,6 +8,7 @@ import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
 public class SimpleTest {
 
@@ -16,7 +18,9 @@ public class SimpleTest {
 	public static void main(String[] args) throws SQLException {
 		var jdbi = createDatabase("test");
 		var simpleDao = jdbi.onDemand(SimpleDao.class);
+		Stopwatch stopwatch = Stopwatch.createStarted();
 		System.out.println(simpleDao.getAll());
+		System.out.println(stopwatch.elapsed(TimeUnit.MILLISECONDS) + " ms");
 	}
 
 	public static Jdbi createDatabase(String databaseName) throws SQLException {

@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    compile 'com.google.guava:guava:29.0-jre'
     compile 'org.postgresql:postgresql:42.2.14'
     compile 'org.jdbi:jdbi3-core:3.14.1'
     compile 'org.jdbi:jdbi3-sqlobject:3.14.1'
