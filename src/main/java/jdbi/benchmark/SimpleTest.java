@@ -1,5 +1,7 @@
 package jdbi.benchmark;
 
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.jdbi3.InstrumentedSqlLogger;
 import com.google.common.base.Stopwatch;
 import jdbi.benchmark.dao.SimpleDao;
 import org.jdbi.v3.core.Jdbi;
@@ -43,6 +45,7 @@ public class SimpleTest {
 			}
 		}
 
+		jdbi.setSqlLogger(new InstrumentedSqlLogger(new MetricRegistry()));
 		return jdbi;
 	}
 }
